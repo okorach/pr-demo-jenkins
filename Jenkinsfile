@@ -7,19 +7,21 @@ pipeline {
       }
     }
     stage('SonarQube LTS analysis') {
-      def scannerHome = tool 'SonarScanner';
       steps {
         step {
           withSonarQubeEnv('SQ LTS') {
-            sh "${scannerHome}/bin/sonar-scanner"
+            script {
+              def scannerHome = tool 'SonarScanner';
+              sh "${scannerHome}/bin/sonar-scanner"
+            }
           }
         }
       }
     }
     stage("SonarQube LTS Quality Gate") {
       steps {
-        timeout(time: 1, unit: 'HOURS') {
-          step {
+        step {
+          timeout(time: 5, unit: 'MINUTES') {
             def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
             if (qg.status != 'OK') {
               echo "Quality gate failed: ${qg.status}, proceeding anyway"
@@ -29,18 +31,21 @@ pipeline {
       }
     }
     stage('SonarQube LATEST analysis') {
-      def scannerHome = tool 'SonarScanner';
+
       steps {
         step {
-          withSonarQubeEnv('SQ Latest') { // If you have configured more than one global server connection, you can specify its name
-            sh "${scannerHome}/bin/sonar-scanner"
+          withSonarQubeEnv('SQ Latest') {
+            script {
+              def scannerHome = tool 'SonarScanner';
+              sh "${scannerHome}/bin/sonar-scanner"
+            }
           }
         }
       }
     }
     stage("SonarQube LATEST Quality Gate") {
       steps {
-        timeout(time: 1, unit: 'HOURS') { // Just in case something goes wrong, pipeline will be killed after a timeout
+        timeout(time: 5, unit: 'MINUTES') { // Just in case something goes wrong, pipeline will be killed after a timeout
           step {
             def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
             if (qg.status != 'OK') {
