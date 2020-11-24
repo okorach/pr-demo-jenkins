@@ -1,11 +1,6 @@
 pipeline {
   agent any
   stages {
-    stage('SCM') {
-      steps {
-        git 'https://github.com/okorach/pr-demo-jenkins'
-      }
-    }
     stage('SonarQube LTS analysis') {
       steps {
           withSonarQubeEnv('SQ LTS') {
