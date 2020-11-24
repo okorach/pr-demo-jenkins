@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('SCM') {
       steps {
-        git 'https://github.com/okorach/pr-demo-github.git'
+        git 'https://github.com/okorach/pr-demo-jenkins.git'
       }
     }
     stage('SonarQube LTS analysis') {
