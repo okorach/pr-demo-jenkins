@@ -8,14 +8,12 @@ pipeline {
     }
     stage('SonarQube LTS analysis') {
       steps {
-        step {
           withSonarQubeEnv('SQ LTS') {
             script {
               def scannerHome = tool 'SonarScanner';
               sh "${scannerHome}/bin/sonar-scanner"
             }
           }
-        }
       }
     }
     stage("SonarQube LTS Quality Gate") {
