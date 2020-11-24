@@ -22,9 +22,11 @@ pipeline {
       steps {
         step {
           timeout(time: 5, unit: 'MINUTES') {
-            def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
-            if (qg.status != 'OK') {
-              echo "Quality gate failed: ${qg.status}, proceeding anyway"
+            script {
+              def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
+              if (qg.status != 'OK') {
+                echo "Quality gate failed: ${qg.status}, proceeding anyway"
+              }
             }
           }
         }
